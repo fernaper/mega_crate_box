@@ -56,7 +56,7 @@ class SceneEntity():
 
 
     def on_collide(self, other):
-        logging.info(f'[COLLISION] {self} <= = => {other}.')
+        logging.debug(f'[COLLISION] {self} <= = => {other}.')
         for behaviour in self.behaviours:
             behaviour.on_collide(other)
 

@@ -38,6 +38,13 @@ class MegaCrateBox(arcade.Window):
             Player(self, 700, 500, behaviours=[
                 Bounce(speed=250, direction=[1,-1], screen_collide=50)
             ]),
+            Player(self, 800, 500, behaviours=[
+                Bounce(speed=250, direction=[1,-1], screen_collide=50)
+            ]),
+            Player(self, 500, 200, behaviours=[
+                Bounce(speed=250, direction=[1,-1], screen_collide=50)
+            ]),
+            Player(self, 750, 250),
         ]
 
         self.spatial_indexing = {}
@@ -119,7 +126,7 @@ class MegaCrateBox(arcade.Window):
                             self.debug_lines.append((scene_object.x, scene_object.y, candidate.x, candidate.y))
 
         if confirmated_collisions:
-            logging.info(f'Confirmated collisions: {confirmated_collisions}')
+            logging.debug(f'Confirmated collisions: {confirmated_collisions}')
 
         for scene_object, collisions in confirmated_collisions.items():
             for collision_object in collisions:

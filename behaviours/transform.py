@@ -24,9 +24,9 @@ class Bounce(Transform):
         width, height = self.parent.window.get_size()
 
         if self.parent.x + self.screen_collide >= width or self.parent.x - self.screen_collide <= 0:
-            self.direction[0] *= -1
+            self.direction[0] = (-1 if self.parent.x + self.screen_collide >= width else 1) * abs(self.direction[0])
         if self.parent.y + self.screen_collide >= height or self.parent.y - self.screen_collide <= 0:
-            self.direction[1] *= -1
+            self.direction[1] = (-1 if self.parent.y + self.screen_collide >= height else 1) * abs(self.direction[1])
 
 
     def on_collide(self, other):
