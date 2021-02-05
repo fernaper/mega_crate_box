@@ -1,5 +1,4 @@
 import arcade
-import random
 
 from entities.scene_object import SceneEntity
 from colliders.collider import CircleCollider
@@ -15,12 +14,6 @@ class Player(SceneEntity):
 
     def __init__(self, *args, radius: float=50, **kwargs) -> None:
         self.radius = radius
-        self.color = random.choice([
-            arcade.color.WILD_BLUE_YONDER,
-            arcade.color.WINE,
-            arcade.color.ZAFFRE,
-            arcade.color.YALE_BLUE,
-        ])
 
         collider = CircleCollider(self, self.radius)
 
