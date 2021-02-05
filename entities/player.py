@@ -8,7 +8,12 @@ from utilities.animations import AnimatedWalkingSprite
 
 class Player(SceneEntity):
 
-    def __init__(self, *args, radius=50, **kwargs):
+    # Physics
+    MOVEMENT_SPEED = 8
+    JUMP_SPEED = 28
+    GRAVITY = 1.1
+
+    def __init__(self, *args, radius: float=50, **kwargs) -> None:
         self.radius = radius
         self.color = random.choice([
             arcade.color.WILD_BLUE_YONDER,
@@ -22,7 +27,7 @@ class Player(SceneEntity):
         super().__init__(*args, collider=collider, **kwargs)
 
 
-    def setup(self):
+    def setup(self) -> None:
         self.sprite_list = arcade.SpriteList()
         self.animation = AnimatedWalkingSprite(8, center_x=self.x, center_y=self.y, animations_per_second=10)
         self.animation.stand_left_textures
@@ -66,10 +71,15 @@ class Player(SceneEntity):
 
         self.sprite_list.append(self.animation)
 
+        self.physics_engine = arcade.PhysicsEnginePlatformer(
+            self.animation, arcade.SpriteList(),
+            gravity_constant=Player.GRAVITY
+        )
+
         super().setup()
 
 
-    def on_key_press(self, key, modifiers):
+    def on_key_press(self, key: int, modifiers: int) -> None:
         if key == self.window.get_control('up'):
             self.animation.change_y = 15
 
@@ -83,12 +93,12 @@ class Player(SceneEntity):
             self.animation.change_x = 15
 
 
-    def on_key_release(self, key, modifiers):
+    def on_key_release(self, key: int, modifiers: int) -> None:
         if key in (self.window.get_control('up'), self.window.get_control('down')):
             self.animation.change_y = 0
         elif key in (self.window.get_control('left'), self.window.get_control('right')):
             self.animation.change_x = 0
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'<Player{super().__str__()[7:]}'

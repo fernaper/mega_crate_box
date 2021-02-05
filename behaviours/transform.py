@@ -1,6 +1,11 @@
 import math
 
+from typing import List, TYPE_CHECKING
+
 from behaviours.behaviour import Behaviour
+
+if TYPE_CHECKING:
+    from entities.scene_object import SceneEntity
 
 
 class Transform(Behaviour):
@@ -11,13 +16,14 @@ class Transform(Behaviour):
 
 class Bounce(Transform):
 
-    def __init__(self, speed: float=1000, direction: 'List[float]'=[1,1], screen_collide: float=0.0):
+    def __init__(self, speed: float=1000, direction: List[float]=[1,1],
+                 screen_collide: float=0.0) -> None:
         self.speed = speed
         self.direction = direction
         self.screen_collide = screen_collide
 
 
-    def on_update(self, delta_time: float):
+    def on_update(self, delta_time: float) -> None:
         self.parent.x += self.speed * self.direction[0] * delta_time
         self.parent.y += self.speed * self.direction[1] * delta_time
 
@@ -29,7 +35,7 @@ class Bounce(Transform):
             self.direction[1] = (-1 if self.parent.y + self.screen_collide >= height else 1) * abs(self.direction[1])
 
 
-    def on_collide(self, other):
+    def on_collide(self, other: 'SceneEntity') -> None:
         # First get normalized directional vector
         distance = [self.parent.x - other.x, self.parent.y - other.y]
         norm = math.sqrt(distance[0] ** 2 + distance[1] ** 2)

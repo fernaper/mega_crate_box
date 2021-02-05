@@ -1,15 +1,25 @@
+from __future__ import annotations
+
 import arcade
 import itertools
 import logging
 
+from typing import List, Tuple, TYPE_CHECKING, Union
+
 from pyglet.gl import GL_NEAREST
+
+if TYPE_CHECKING:
+    from behaviours.behaviour import Behaviour
+    from colliders.collider import Collider
 
 
 class SceneEntity():
 
     counter_id = itertools.count()
 
-    def __init__(self, window, x, y, behaviours=[], collider=None, key_observer=False, **kwargs):
+    def __init__(self, window: arcade.Window, x: float, y: float,
+                 behaviours: 'List[Behaviour]'=[], collider: 'Collider'=None,
+                 key_observer: bool=False, **kwargs) -> None:
         self.id = next(SceneEntity.counter_id)
         self.window = window
         self.x = x
@@ -27,14 +37,16 @@ class SceneEntity():
 
         self.sprite_list = None
         self.animation = None
+
+        self.physics_engine = None
         self.setup()
 
 
-    def setup(self):
+    def setup(self) -> None:
         ...
 
 
-    def on_draw(self):
+    def on_draw(self) -> None:
         if self.sprite_list is not None:
             self.sprite_list.draw(filter=GL_NEAREST)
 
@@ -44,7 +56,10 @@ class SceneEntity():
             )
 
 
-    def on_update(self, delta_time):
+    def on_update(self, delta_time: float) -> None:
+        if self.physics_engine:
+            self.physics_engine.update()
+
         if self.sprite_list:
             self.sprite_list.update()
             self.sprite_list.update_animation()
@@ -72,7 +87,7 @@ class SceneEntity():
             self.window.spatial_indexing[self.x][self.y].append(self)
 
 
-    def get_coordinates_to_check(self):
+    def get_coordinates_to_check(self) -> Union[Tuple[None, None, None, None], [float, float, float, float]]:
         if self.collider is None:
             return None, None, None, None
 
@@ -80,19 +95,19 @@ class SceneEntity():
             return self.collider.get_coordinates_to_check()
 
 
-    def on_collide(self, other):
+    def on_collide(self, other: SceneEntity) -> None:
         logging.debug(f'[COLLISION] {self} <= = => {other}.')
         for behaviour in self.behaviours:
             behaviour.on_collide(other)
 
 
-    def on_key_press(self, key, modifiers):
+    def on_key_press(self, key: int, modifiers: int) -> None:
         ...
 
 
-    def on_key_release(self, key, modifiers):
+    def on_key_release(self, key: int, modifiers: int) -> None:
         ...
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'<Object:{self.id}; x:{self.x}; y:{self.y}>'

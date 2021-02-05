@@ -2,8 +2,11 @@ import arcade
 import logging
 import random
 
+from typing import Union
+
 from entities.ball import Ball
 from entities.player import Player
+from entities.scene_object import SceneEntity
 from behaviours.transform import Bounce
 
 
@@ -22,7 +25,8 @@ class MegaCrateBox(arcade.Window):
         'right': arcade.key.RIGHT
     }
 
-    def __init__(self, width, height, title, update_rate=1/60):
+    def __init__(self, width: int, height: int, title: str,
+                 update_rate: float=1/60) -> None:
         super().__init__(width, height, title)
         #self.set_location(400, 200)
         self.set_update_rate(update_rate)
@@ -37,11 +41,11 @@ class MegaCrateBox(arcade.Window):
         self.setup()
 
 
-    def get_control(self, key_event: str):
+    def get_control(self, key_event: str) -> Union[int, None]:
         return MegaCrateBox.CONTROLS.get(key_event)
 
 
-    def setup(self):
+    def setup(self) -> None:
         arcade.set_background_color(arcade.color.YELLOW_ORANGE)
 
         # Add initial scene entities
@@ -85,15 +89,15 @@ class MegaCrateBox(arcade.Window):
         self.add_scene_entity(Player(self, 500, 100, key_observer=True))
 
 
-    def add_scene_entity(self, scene_entity):
+    def add_scene_entity(self, scene_entity: SceneEntity) -> None:
         self.scene_entities.append(scene_entity)
 
 
-    def add_key_observer(self, observer):
+    def add_key_observer(self, observer: SceneEntity) -> None:
         self.key_observers.append(observer)
 
 
-    def on_draw(self):
+    def on_draw(self) -> None:
         arcade.start_render()
 
         for scene_entity in self.scene_entities:
@@ -103,7 +107,7 @@ class MegaCrateBox(arcade.Window):
             arcade.draw_line(*debug_line, arcade.color.WHITE)
 
 
-    def on_update(self, delta_time: float):
+    def on_update(self, delta_time: float) -> None:
         # Reset spatial index
         self.spatial_indexing = {}
 
@@ -113,7 +117,7 @@ class MegaCrateBox(arcade.Window):
         self.launch_collisions()
 
 
-    def launch_collisions(self):
+    def launch_collisions(self) -> None:
         # From one object to a set of objects
         # this way we avoid to launch two times
         # the same collision on the same object
@@ -174,12 +178,12 @@ class MegaCrateBox(arcade.Window):
                 collision_object.on_collide(scene_entity)
 
 
-    def on_key_press(self, key, modifiers):
+    def on_key_press(self, key: int, modifiers: int) -> None:
         for observer in self.key_observers:
             observer.on_key_press(key, modifiers)
 
 
-    def on_key_release(self, key, modifiers):
+    def on_key_release(self, key: int, modifiers: int) -> None:
         for observer in self.key_observers:
             observer.on_key_release(key, modifiers)
 
